@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -32,21 +36,13 @@ export class UsersService {
     }
   }
 
-  async register(userReq: UsersRegisterRequestDto): Promise<User> {
-    try {
-      const user = this.userRepository.create(userReq);
-      return await this.userRepository.save(user);
-    } catch (error) {
-      throw error;
-    }
-  }
-
   async find(): Promise<User[]> {
     return await this.userRepository.find();
   }
 
-  async findOne(id: number): Promise<User> {
+  async findOne(id: number): Promise<User | null> {
     try {
+      if (!id) return null;
       const options: FindOneOptions<User> = { where: { id } };
       const user = await this.userRepository.findOne(options);
 
@@ -54,6 +50,16 @@ export class UsersService {
         throw new NotFoundException(`User with id: ${id} not found`);
       }
 
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findOneByEmail(email: string): Promise<User> {
+    try {
+      const options: FindOneOptions<User> = { where: { email } };
+      const user = await this.userRepository.findOne(options);
       return user;
     } catch (error) {
       throw error;
@@ -69,4 +75,6 @@ export class UsersService {
       throw error;
     }
   }
+
+  async login() {}
 }
