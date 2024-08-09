@@ -23,16 +23,16 @@ describe('UsersController', () => {
         users.push(user);
         return Promise.resolve(user);
       },
-      remove: (id) => {
-        const user = fakeUsersService.findOne(id);
+      remove: async (id) => {
+        const user = await fakeUsersService.findOne(id);
+        console.log(user);
         if (user) {
           users = users.filter((user) => user.id !== id);
           return Promise.resolve(user);
         } else {
-          return Promise.reject();
+          return Promise.reject(null);
         }
       },
-      //update: (id, { email, password }) => {},
     };
 
     fakeAuthService = {
@@ -92,5 +92,17 @@ describe('UsersController', () => {
 
     expect(user).toBeDefined;
     expect(session.userId).toBeDefined;
+  });
+
+  it('can remove an existing user by id', async () => {
+    const user = await controller.findOne(1);
+    expect(user).toBeDefined;
+    const removedUser = await controller.remove(1);
+    expect(removedUser).toBeDefined;
+  });
+
+  it('cannot remove an existing user by id', async () => {
+    fakeUsersService.findOne = (id) => Promise.reject(new NotFoundException());
+    await expect(controller.findOne(123)).rejects.toThrow(NotFoundException);
   });
 });

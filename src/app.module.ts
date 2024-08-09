@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ReportsController } from './reports/reports.controller';
@@ -6,22 +6,59 @@ import { ReportsService } from './reports/reports.service';
 import { ReportsModule } from './reports/reports.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './users/entities/user.entity';
-import { Report } from './reports/entities/report.entity';
+import { APP_PIPE } from '@nestjs/core';
+import * as session from 'express-session';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'car_pricing.sqlite',
-      autoLoadEntities: true,
-      // entities: [UserEntity, ReportEntity],
-      synchronize: true,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV}`,
     }),
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          type: 'sqlite',
+          database: config.get<string>('DB_NAME'),
+          autoLoadEntities: true,
+          synchronize: true,
+        };
+      },
+    }),
+    // TypeOrmModule.forRoot({
+    //   type: 'sqlite',
+    //   database: 'car_pricing.sqlite',
+    //   autoLoadEntities: true,
+    //   synchronize: true,
+    // }),
     ReportsModule,
     UsersModule,
   ],
   controllers: [AppController, ReportsController],
-  providers: [AppService, ReportsService],
+  providers: [
+    AppService,
+    ReportsService,
+    {
+      provide: APP_PIPE,
+      useValue: new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+      }),
+    },
+  ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(
+        session({
+          secret: 'my-secret',
+          resave: false,
+          saveUninitialized: false,
+        }),
+      )
+      .forRoutes('*');
+  }
+}

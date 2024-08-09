@@ -69,7 +69,6 @@ export class UsersService {
   async remove(id: number): Promise<User> {
     try {
       const user = await this.findOne(id);
-      console.log(user);
       return this.userRepository.remove(user);
     } catch (error) {
       throw error;
