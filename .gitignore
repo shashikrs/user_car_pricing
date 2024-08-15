@@ -81,6 +81,11 @@ web_modules/
 .env.development
 .env.test
 
+# unwanted generated db files
+car_pricing.sqlite
+car_pricing_test.sqlite
+car_pricing_dev.sqlite
+
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
