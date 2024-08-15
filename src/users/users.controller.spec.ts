@@ -25,7 +25,6 @@ describe('UsersController', () => {
       },
       remove: async (id) => {
         const user = await fakeUsersService.findOne(id);
-        console.log(user);
         if (user) {
           users = users.filter((user) => user.id !== id);
           return Promise.resolve(user);

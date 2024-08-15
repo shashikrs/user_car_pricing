@@ -15,6 +15,10 @@ describe('Authentication System (e2e)', () => {
     await app.init();
   });
 
+  afterEach(async () => {
+    app.close();
+  });
+
   it('handles a register request', () => {
     const emailReq = 'test1@test.com';
     return request(app.getHttpServer())
