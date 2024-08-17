@@ -8,7 +8,7 @@ export default registerAs('config', () => ({
     type: 'postgres',
     url: process.env.DATABASE_URL,
     database: process.env.DATABASE || 'car_pricing_dev.sqlite',
-    entities: ['dist/src/**/**.entity.js'],
+    entities: ['dist/src/**/entities/**.entity.js'],
     migrations: ['dist/src/db/migrations/*.js'],
     migrationsRun: true,
     ssl: {
