@@ -20,6 +20,7 @@ import { DataSource } from 'typeorm';
     }),
     TypeOrmModule.forRootAsync({
       useFactory: async (configService: ConfigService) => {
+        console.log(configService.get('config'));
         return configService.get('config.database');
       },
       inject: [ConfigService],
