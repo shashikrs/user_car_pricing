@@ -6,7 +6,8 @@ export default registerAs('config', () => ({
   database: {
     name: 'default',
     type: 'postgres',
-    database: process.env.DATABASE_URL || 'car_pricing_dev.sqlite',
+    url: process.env.DATABASE_URL,
+    database: process.env.DATABASE || 'car_pricing_dev.sqlite',
     entities: ['dist/src/**/**.entity.js'],
     migrations: ['dist/src/db/migrations/*.js'],
     migrationsRun: true,
