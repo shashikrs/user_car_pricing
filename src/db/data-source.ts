@@ -9,7 +9,6 @@ const dataSource = new DataSource({
   name: 'default',
   type: 'postgres',
   url: process.env.DATABASE_URL,
-  database: process.env.DATABASE || 'car_pricing_dev.sqlite',
   entities: ['dist/src/**/entities/*.entity.js'],
   migrations: ['dist/src/db/migrations/*.js'],
 });
