@@ -9,7 +9,7 @@ const dataSource = new DataSource({
   name: 'default',
   type: 'sqlite',
   database: process.env.DATABASE_NAME,
-  entities: ['dist/src/**/*.entity.js'],
+  entities: ['dist/src/**/entities/*.entity.js'],
   migrations: ['dist/src/db/migrations/*.js'],
 });
 
