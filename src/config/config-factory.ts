@@ -1,27 +1,22 @@
 import { registerAs } from '@nestjs/config';
-import prodConfig from './config';
+import config from './config';
 import devConfig from './config-development';
+import prodConfig from './config-production';
 import * as _ from 'lodash';
 import testConfig from './config-test';
 
 const environment = process.env.NODE_ENV || 'development';
 let envConfig;
 
-console.log(environment);
-
 switch (environment) {
   case 'development':
-    envConfig = () => mergeEnvironmentConfigs(prodConfig(), devConfig());
+    envConfig = () => mergeEnvironmentConfigs(config(), devConfig());
     break;
   case 'test':
-    envConfig = () => mergeEnvironmentConfigs(prodConfig(), testConfig());
+    envConfig = () => mergeEnvironmentConfigs(config(), testConfig());
     break;
   case 'production':
-    envConfig = () => {
-      return {
-        ...prodConfig(),
-      };
-    };
+    envConfig = () => mergeEnvironmentConfigs(config(), prodConfig());
     break;
   default: {
     console.log(environment);

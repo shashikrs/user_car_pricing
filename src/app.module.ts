@@ -8,19 +8,6 @@ import { APP_PIPE } from '@nestjs/core';
 import * as session from 'express-session';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configFactory from './config/config-factory';
-import { DataSource } from 'typeorm';
-
-let filePath = '.env';
-
-console.log(process.env.NODE_ENV);
-console.log(filePath);
-
-if (process.env.NODE_ENV !== 'production') {
-  console.log(process.env.NODE_ENV);
-  filePath = `.env.${process.env.NODE_ENV}`;
-
-  console.log(filePath);
-}
 
 @Module({
   imports: [
@@ -32,7 +19,6 @@ if (process.env.NODE_ENV !== 'production') {
     }),
     TypeOrmModule.forRootAsync({
       useFactory: async (configService: ConfigService) => {
-        console.log(configService.get('config'));
         return configService.get('config.database');
       },
       inject: [ConfigService],
