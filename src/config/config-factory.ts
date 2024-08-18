@@ -7,6 +7,8 @@ import testConfig from './config-test';
 const environment = process.env.NODE_ENV || 'development';
 let envConfig;
 
+console.log(environment);
+
 switch (environment) {
   case 'development':
     envConfig = () => mergeEnvironmentConfigs(prodConfig(), devConfig());

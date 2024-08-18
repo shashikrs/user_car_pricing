@@ -10,11 +10,23 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import configFactory from './config/config-factory';
 import { DataSource } from 'typeorm';
 
+let filePath = '.env';
+
+console.log(process.env.NODE_ENV);
+console.log(filePath);
+
+if (process.env.NODE_ENV !== 'production') {
+  console.log(process.env.NODE_ENV);
+  filePath = `.env.${process.env.NODE_ENV}`;
+
+  console.log(filePath);
+}
+
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: `.env.${process.env.NODE_ENV}`,
+      envFilePath: ['.env', '.env.development', '.env.test'],
       load: [configFactory],
       cache: true,
     }),

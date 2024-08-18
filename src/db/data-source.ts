@@ -9,8 +9,12 @@ const dataSource = new DataSource({
   name: 'default',
   type: 'postgres',
   url: process.env.DATABASE_URL,
-  entities: ['dist/src/**/entities/*.entity.js'],
-  migrations: ['dist/src/db/migrations/*.js'],
+  entities: ['dist/**/entities/**.entity.js'],
+  migrations: ['dist/db/migrations/*.js'],
+  migrationsRun: true,
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
 
 export { dataSource };
